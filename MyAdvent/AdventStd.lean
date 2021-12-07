@@ -5,6 +5,7 @@ import Lean.Util.SCC
 open List
 
 -- it is not partial, but unsure how to make it not partial
+-- TODO: how to make it not partial?
 private partial def fold_slid_aux_opt (n: Nat) (l: List α) : Option (List α) := 
 match (n, l) with
   | (0, _) => Option.some []
@@ -25,7 +26,6 @@ def minByAux [LE β] [DecidableRel (@LE.le β  _)] : (List (α × β)) -> Option
 def minBy? [LE β] [DecidableRel (@LE.le β  _)] (f: α -> β) (l: List α ) : Option α := 
   Prod.fst <$> (l.map (fun a => (a, f a)) |> minByAux )
 
-
 end List
 
 
@@ -39,7 +39,7 @@ partial def List.transpose: (List (List α )) -> List (List α )
   let tails := others.filterMap List.tail?
   (h :: heads) :: transpose (l1 :: tails)
 
-def List.sum [m : Add α ] [m2: OfNat α 0] (l: List α ): α := l.foldl (m.add) (m2.ofNat)
+def List.sum [m : Add α] [m2: OfNat α 0] (l: List α ): α := l.foldl (m.add) (m2.ofNat)
 
 -- The flatten operation in scala
 -- I could not find the corresponding operation in Lean
