@@ -94,7 +94,28 @@ partial def List.sort (lt: α -> α -> Bool) (l: List α ): List α := match l w
     let (lower, upper) := List.partition (lt . p) l2
     (sort lt lower) ++ [p] ++ (sort lt upper)
 
+
+def all_list_splits : List α -> List ((List α × List α))
+| [] => []
+| (x :: l) => all_list_splits l |>.map (fun (l1, l2) => (x :: l1, l2)) |>.cons ([], x :: l)
+
+def findCombi_auxi (head: List α) (l: List α ) (test: List α -> Option β) : Option β := match l with
+| [] => test head
+| (x :: l2) => do
+  let mut ret := none
+  for (bef, aft) in (all_list_splits head) ++ [(head, [])] do
+    let h2 := bef ++ [x] ++ aft
+    match findCombi_auxi h2 l2 test with
+    | some res =>
+        ret := (some res)
+        break
+    | none => continue
+  ret
+
+def findCombi (l: List α ) (test: List α -> Option β) : Option β := findCombi_auxi [] l test
+
 end Std2
+
 
 
 namespace Std
