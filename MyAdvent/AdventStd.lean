@@ -114,7 +114,13 @@ def findCombi_auxi (head: List α) (l: List α ) (test: List α -> Option β) : 
 
 def findCombi (l: List α ) (test: List α -> Option β) : Option β := findCombi_auxi [] l test
 
+-- ******** String utils ***********
+
+-- def String.fromChars (l: List Char) : String := (String.intercalate "" (l.map (fun i => s!"{i}")))
+
 end Std2
+
+
 
 
 
