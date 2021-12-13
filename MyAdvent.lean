@@ -6,10 +6,11 @@
 -- import MyAdvent.D4
 -- import MyAdvent.D5
 -- import MyAdvent.D6
-import MyAdvent.D7
-import MyAdvent.D8
+-- import MyAdvent.D7
+-- import MyAdvent.D8
+import MyAdvent.D9
 
 def main : IO Unit := do
 -- question1
 -- question2
-run8b
+run9b

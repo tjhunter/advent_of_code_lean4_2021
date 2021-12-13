@@ -49,6 +49,7 @@ def List.flatten : (List (List α )) -> List α
 
 def List.flatmap (f: α -> List β) (l: List α) : List β := List.flatten (l.map f)
 
+
 def List.range2 (fr: Int) (to: Int) : List Int := (List.range (to - fr).toNat).map f where
   f : Nat -> Int
   | i => ((i: Int) + fr)
@@ -114,10 +115,25 @@ def findCombi_auxi (head: List α) (l: List α ) (test: List α -> Option β) : 
 
 def findCombi (l: List α ) (test: List α -> Option β) : Option β := findCombi_auxi [] l test
 
+def Char.toString (c: Char) : String := s!"{c}"
+
+
+-- ***** Array functions ********
+
+-- Only restriction: start <= until
+-- Until not included
+-- Follows the python slicing convention
+def Array.slice (a : Array α ) (start: Int) (until: Int) : Array α := 
+  let start_idx: Nat := if start < 0 then (a.size + start).toNat else start.toNat
+  let end_idx:Nat := if until < 0 then (a.size + until).toNat else until.toNat
+  (List.toArray (a.data.drop start_idx)).shrink (a.size - end_idx - 1)
+
+def Array.first? (a: Array α ): Option α := a.data.head?
+
+def Array.last? (a: Array α ): Option α := if a.isEmpty then none else a.get? (a.size -1)
+
 end Std2
 
 
-
-namespace Std
-def Array.slice (a : Array α ) (start: Nat) (until: Nat) : Array α := panic! ""
-end Std
+def List.flatmap2 (f: α -> List β) : List α -> List β
+| l => Std2.List.flatten (l.map f)
