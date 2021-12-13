@@ -69,13 +69,13 @@ def List.fold_sliding_window (n: Nat) (f: List α -> β) (l: List α) : List β 
 def HashSet.fromList [BEq a] [Hashable a] (l: List a) : (Std.HashSet a) :=
   l.foldl Std.HashSet.insert Std.HashSet.empty
 
-def HashMap.fromList [BEq a] [Hashable a] (l: List (a × b)) : (Std.HashMap a b) := do
+def HashMap.fromList [BEq a] [Hashable a] (l: List (a × b)) : (Std.HashMap a b) := Id.run do
   let mut m: Std.HashMap a b := Std.HashMap.empty
   for ⟨ a , b ⟩ in l do
     m := m.insert a b
   m
 
-def HashMap.groupList [BEq a] [Hashable a] (l: List (a × b)) : (Std.HashMap a (List b)) := do
+def HashMap.groupList [BEq a] [Hashable a] (l: List (a × b)) : (Std.HashMap a (List b)) := Id.run do
   let mut m: Std.HashMap a (List b) := Std.HashMap.empty
   for ⟨ a , b ⟩ in l do
     match m.getOp a with
@@ -101,7 +101,7 @@ def all_list_splits : List α -> List ((List α × List α))
 
 def findCombi_auxi (head: List α) (l: List α ) (test: List α -> Option β) : Option β := match l with
 | [] => test head
-| (x :: l2) => do
+| (x :: l2) => Id.run do
   let mut ret := none
   for (bef, aft) in (all_list_splits head) ++ [(head, [])] do
     let h2 := bef ++ [x] ++ aft
