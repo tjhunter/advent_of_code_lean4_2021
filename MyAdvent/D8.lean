@@ -50,7 +50,7 @@ translations.all (fun s => digitsSet.contains s)
 -- Tries all the permutation of digit values until it finds one that works
 def run_problem (encoding: String) (challenge: String) : Nat := 
 let encoded := encoding.splitOn " " |>.map sortedString
-let res2 := findCombi alphabet.toList (fun l =>
+let res2 := List.findCombi alphabet.toList (fun l =>
   let test_alph := String.mk l
   if check encoded test_alph then some test_alph else none
 ) |> Option.get!

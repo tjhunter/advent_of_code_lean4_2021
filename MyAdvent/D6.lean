@@ -1,4 +1,5 @@
 import Std.Data.HashSet
+import Std.Data.HashMap
 import MyAdvent.AdventStd
 
 open Std
