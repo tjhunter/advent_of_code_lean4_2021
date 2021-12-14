@@ -2,7 +2,7 @@ import Lean.Data.Json
 import Std.Data.HashSet
 import Std.Data.HashMap
 import Lean.Util.SCC
-open List
+-- open List
 
 -- it is not partial, but unsure how to make it not partial
 -- TODO: how to make it not partial?
@@ -12,8 +12,6 @@ match (n, l) with
   | (_, []) => Option.none
   | (i+1, x::l2) => (x :: .) <$> fold_slid_aux_opt i l2
 
-
-namespace Std2 
 
 namespace List
 
@@ -26,8 +24,19 @@ def minByAux [LE β] [DecidableRel (@LE.le β  _)] : (List (α × β)) -> Option
 def minBy? [LE β] [DecidableRel (@LE.le β  _)] (f: α -> β) (l: List α ) : Option α := 
   Prod.fst <$> (l.map (fun a => (a, f a)) |> minByAux )
 
+
+-- The flatten operation in scala
+-- I could not find the corresponding operation in Lean
+def flatten : (List (List α )) -> List α 
+| [] => []
+| l :: t => List.append l (flatten t)
+
+def flatmap (f: α -> List β) (l: List α) : List β := List.flatten (l.map f)
+
 end List
 
+
+namespace Std2 
 
 -- TODO: fix the partial
 partial def List.transpose: (List (List α )) -> List (List α ) 
@@ -41,13 +50,13 @@ partial def List.transpose: (List (List α )) -> List (List α )
 
 def List.sum [m : Add α] [m2: OfNat α 0] (l: List α ): α := l.foldl (m.add) (m2.ofNat)
 
--- The flatten operation in scala
--- I could not find the corresponding operation in Lean
-def List.flatten : (List (List α )) -> List α 
-| [] => []
-| l :: t => List.append l (flatten t)
+-- -- The flatten operation in scala
+-- -- I could not find the corresponding operation in Lean
+-- def List.flatten : (List (List α )) -> List α 
+-- | [] => []
+-- | l :: t => List.append l (flatten t)
 
-def List.flatmap (f: α -> List β) (l: List α) : List β := List.flatten (l.map f)
+-- def List.flatmap (f: α -> List β) (l: List α) : List β := List.flatten (l.map f)
 
 
 def List.range2 (fr: Int) (to: Int) : List Int := (List.range (to - fr).toNat).map f where
@@ -123,7 +132,7 @@ def Char.toString (c: Char) : String := s!"{c}"
 
 -- def String.fromChars (l: List Char) : String := (String.intercalate "" (l.map (fun i => s!"{i}")))
 
-end Std2
+-- end Std2
 
 -- Only restriction: start <= until
 -- Until not included

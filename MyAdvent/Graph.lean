@@ -38,7 +38,7 @@ if graph.vx_internal.contains nid then
 else none
 
 
-private partial def connectedComponents_internal [ToString α] (nid: α ) (expand: α → List α) (curr: HashSet α) : HashSet α := do
+private partial def connectedComponents_internal [ToString α] (nid: α ) (expand: α → List α) (curr: HashSet α) : HashSet α := Id.run do
 if curr.contains nid then curr else
 let mut set := dbg_trace s!"connectedComponents_internal: {nid} {expand nid} {curr.toList}" ;  curr.insert nid
 for nid2 in expand nid do
@@ -47,7 +47,7 @@ for nid2 in expand nid do
 set
 
 
-def connectedComponents [ToString α] (graph: SimpleGraph α ) : Array (Array α) := do
+def connectedComponents [ToString α] (graph: SimpleGraph α ) : Array (Array α) := Id.run do
   let mut clusters : HashMap α α := HashMap.empty
   let mut res : List (Array α) := []
   for nid in graph.vx_internal.toList do
