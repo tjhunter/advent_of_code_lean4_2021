@@ -97,6 +97,14 @@ def first? (a: Array α ): Option α := a.data.head?
 
 def last? (a: Array α ): Option α := if a.isEmpty then none else a.get? (a.size -1)
 
+def minimum? [LE α] [DecidableRel (@LE.le α  _)] (arr: Array α) : Option α := arr.getMax? (fun x1 x2 => LE.le x2 x1)
+
+def maximum? [LE α] [DecidableRel (@LE.le α  _)] (arr: Array α) : Option α := arr.getMax? (fun x1 x2 => LE.le x1 x2)
+
+def maximum! [Inhabited α] [LE α] [DecidableRel (@LE.le α  _)] (arr: Array α) : α := maximum? arr |>.get!
+
+def mininum! [Inhabited α] [LE α] [DecidableRel (@LE.le α  _)] (arr: Array α) : α := minimum? arr |>.get!
+
 end Array
 
 
@@ -134,8 +142,11 @@ def groupList [BEq a] [Hashable a] (l: List (a × b)) : (Std.HashMap a (List b))
   let z : List (a × (List b)) := m.toList.map (fun ⟨a, l⟩ => ⟨a, l.reverse⟩ )
   fromList z
 
-def groupBy [BEq a] [Hashable a] (f: a -> b) (l: List a) : Std.HashMap a (List b) := 
-  groupList (l.map (fun a0 => (a0, f a0)))
+def groupBy [BEq b] [Hashable b] (f: a -> b) (l: List a) : Std.HashMap b (List a) := 
+  groupList (l.map (fun a0 => (f a0, a0)))
+
+def mapValues [BEq α ] [Hashable α ]  (m: Std.HashMap α β ) (f: β -> γ) : Std.HashMap α γ := 
+m.toList.map (fun (k,v) => (k, f v)) |> fromList
 
 end HashMap
 end Std
@@ -145,12 +156,17 @@ end Std
 
 namespace Std2 
 
+instance : Hashable Char where
+  hash c := hash (s!"{c}")
+
 -- Given an integer in boolean representation, converts it to a natural.
 def bin_to_nat (l: List Bool) : Nat := 
 let n := l.length
 List.sum $ (List.range n).zipWith (λ i b => if b then 2 ^ (n-i-1) else 0) l
 
 def Char.toString (c: Char) : String := s!"{c}"
+
+def String.fromChars (cs: List Char) : String := String.mk cs
 
 end Std2
 
