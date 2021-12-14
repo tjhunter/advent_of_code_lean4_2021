@@ -23,6 +23,18 @@ private def minByAux [LE β] [DecidableRel (@LE.le β  _)] : (List (α × β)) -
 def minBy? [LE β] [DecidableRel (@LE.le β  _)] (f: α -> β) (l: List α ) : Option α := 
   Prod.fst <$> (l.map (fun a => (a, f a)) |> minByAux )
 
+-- def minimum? [LE α ] [DecidableRel (@LE.le α  _)] : List α -> Option α
+-- | [] => none
+-- | a :: as => match minimum? as with
+--    | none => some a
+--    | some a1 => some <| if LE.le a1 a then a1 else a
+
+def minimum! [Inhabited α ] [LE α ] [DecidableRel (@LE.le α  _)] : List α -> α
+| l => minimum? l |>.get!
+
+
+def maximum! [Inhabited α ] [LT α] [DecidableRel (@LT.lt α _)] : List α -> α
+| l => maximum? l |>.get!
 
 -- The flatten operation in scala
 -- I could not find the corresponding operation in Lean
@@ -56,11 +68,11 @@ def fold_sliding_window (n: Nat) (f: List α -> β) (l: List α) : List β :=
     | [], Option.some l3 => ([f l3] : List β )
     | _, _ => ([] : List β )
 
-partial def List.sort (lt: α -> α -> Bool) (l: List α ): List α := match l with
-| [] => []
-| p :: l2 => 
-    let (lower, upper) := List.partition (lt . p) l2
-    (sort lt lower) ++ [p] ++ (sort lt upper)
+-- partial def List.sort (lt: α -> α -> Bool) (l: List α ): List α := match l with
+-- | [] => []
+-- | p :: l2 => 
+--     let (lower, upper) := List.partition (lt . p) l2
+--     (sort lt lower) ++ [p] ++ (sort lt upper)
 
 
 private def all_list_splits : List α -> List ((List α × List α))
@@ -80,6 +92,8 @@ private def findCombi_auxi (head: List α) (l: List α ) (test: List α -> Optio
     | none => continue
   ret
 
+-- Run all the combinations of the elemnents of a list until it finds a result or 
+-- all the possibilites are exhausted.
 def findCombi (l: List α ) (test: List α -> Option β) : Option β := findCombi_auxi [] l test
 
 end List
